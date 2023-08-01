@@ -1,6 +1,12 @@
+// packages
 const express = require('express');
-const app = express();
 const path = require('path');
+const mongoose = require('mongoose');
+
+// mongoDB
+const connectDB = require('./db/connect');
+
+const app = express();
 
 // sets the 'view engine' configuration for the 'app' object.
 app.set('view engine', 'ejs'); // it means, that we'll use the ejs templating engine to render dynamic content.
@@ -13,6 +19,13 @@ app.get('/', (req, res) => {
   res.render('home'); // renders the 'home' view using the EJS templating
 });
 
-app.listen(3000, () => {
-  console.log(`Serving on port ${port}`);
-});
+const start = async () => {
+  try {
+    await connectDB();
+    app.listen(port, console.log(`Server is listening on port ${port}...`));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+start();
