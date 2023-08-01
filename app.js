@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 
+const Campground = require('./models/campgrounds');
+
 // mongoDB
 const connectDB = require('./db/connect');
 
@@ -17,6 +19,15 @@ const port = 3000;
 
 app.get('/', (req, res) => {
   res.render('home'); // renders the 'home' view using the EJS templating
+});
+
+app.get('/makecampground', async (req, res) => {
+  const camp = new Campground({
+    title: 'My Backyard',
+    description: 'cheap camping!',
+  });
+  await camp.save();
+  res.send(camp);
 });
 
 const start = async () => {
