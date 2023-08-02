@@ -1,7 +1,6 @@
 // packages
 const express = require('express');
 const path = require('path');
-const mongoose = require('mongoose');
 
 const Campground = require('./models/campgrounds');
 
@@ -21,13 +20,10 @@ app.get('/', (req, res) => {
   res.render('home'); // renders the 'home' view using the EJS templating
 });
 
-app.get('/makecampground', async (req, res) => {
-  const camp = new Campground({
-    title: 'My Backyard',
-    description: 'cheap camping!',
-  });
-  await camp.save();
-  res.send(camp);
+app.get('/campgrounds', async (req, res) => {
+  // Get all the Campgrounds
+  const campgrounds = await Campground.find({});
+  res.render('campgrounds/index', { campgrounds }); // renders the 'campground/index' ejs view and pass campgrounds to it.
 });
 
 const start = async () => {
