@@ -21,9 +21,14 @@ app.get('/', (req, res) => {
 });
 
 app.get('/campgrounds', async (req, res) => {
-  // Get all the Campgrounds
-  const campgrounds = await Campground.find({});
+  const campgrounds = await Campground.find({}); // Get all the Campgrounds
   res.render('campgrounds/index', { campgrounds }); // renders the 'campground/index' ejs view and pass campgrounds to it.
+});
+
+app.get('/campgrounds/:id', async (req, res) => {
+  const { id } = req.params;
+  const campground = await Campground.findById( id ); // Get the specific Campground
+  res.render('campgrounds/show', { campground }); // renders the 'campground/show' ejs view and pass campground to it.
 });
 
 const start = async () => {
