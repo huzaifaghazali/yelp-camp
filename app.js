@@ -25,11 +25,18 @@ app.get('/campgrounds', async (req, res) => {
   res.render('campgrounds/index', { campgrounds }); // renders the 'campground/index' ejs view and pass campgrounds to it.
 });
 
+// This route must be above the id route
+app.get('/campgrounds/new', async (req, res) => {
+  res.render('campgrounds/new'); // renders the 'campground/new' ejs view and pass campground to it.
+});
+
 app.get('/campgrounds/:id', async (req, res) => {
   const { id } = req.params;
   const campground = await Campground.findById( id ); // Get the specific Campground
   res.render('campgrounds/show', { campground }); // renders the 'campground/show' ejs view and pass campground to it.
 });
+
+
 
 const start = async () => {
   try {
