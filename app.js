@@ -1,7 +1,8 @@
 // packages
 const express = require('express');
 const path = require('path');
-
+const methodOverride = require('method-override');
+// Models
 const Campground = require('./models/campgrounds');
 
 // mongoDB
@@ -9,12 +10,13 @@ const connectDB = require('./db/connect');
 
 const app = express();
 
-// sets the 'view engine' configuration for the 'app' object.
+// sets the 'view engine' and 'views' configuration for the 'app' object.
 app.set('view engine', 'ejs'); // it means, that we'll use the ejs templating engine to render dynamic content.
-// sets the 'views' configuration for the 'app' object
 app.set('views', path.join(__dirname, 'views')); // views => ejs templates are located. path.join() -> join the current dir name with 'views' dir
 
-app.use(express.urlencoded({ extended: true})); // URL-encoded data from the body of a POST request
+// Middleware
+app.use(express.urlencoded({ extended: true })); // URL-encoded data from the body of a POST request
+app.use(methodOverride('_method')); // Used to override the HTTP methods e.g URLs like /route?_method=PUT.
 
 const port = 3000;
 
@@ -38,17 +40,34 @@ app.post('/campgrounds', async (req, res) => {
   // Create a new campground
   const campground = new Campground(data);
   await campground.save();
-  
-  res.redirect(`/campgrounds/${campground._id}`) // Go to the newly created campground
+
+  res.redirect(`/campgrounds/${campground._id}`); // Go to the newly created campground
 });
 
 app.get('/campgrounds/:id', async (req, res) => {
   const { id } = req.params;
-  const campground = await Campground.findById( id ); // Get the specific Campground
+  const campground = await Campground.findById(id); // Get the specific Campground
   res.render('campgrounds/show', { campground }); // renders the 'campground/show' ejs view and pass campground to it.
 });
 
+app.get('/campgrounds/:id/edit', async (req, res) => {
+  const { id } = req.params;
+  const campground = await Campground.findById(id); // Get the specific Campground
+  res.render('campgrounds/edit', { campground }); // renders the 'campground/edit' ejs view and pass campground to it.
+});
 
+app.put('/campgrounds/:id', async (req, res) => {
+  const { id } = req.params;
+  const data = req.body.campground;
+
+  // Update the campground with specific ID
+  const campground = await Campground.findOneAndUpdate(
+    { _id: id }, // Filter criteria
+    { ...data }, // Updated data
+  );
+
+  res.redirect(`/campgrounds/${campground._id}`); // Go to the newly updated campground
+});
 
 const start = async () => {
   try {
