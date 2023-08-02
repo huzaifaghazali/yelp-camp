@@ -14,6 +14,8 @@ app.set('view engine', 'ejs'); // it means, that we'll use the ejs templating en
 // sets the 'views' configuration for the 'app' object
 app.set('views', path.join(__dirname, 'views')); // views => ejs templates are located. path.join() -> join the current dir name with 'views' dir
 
+app.use(express.urlencoded({ extended: true})); // URL-encoded data from the body of a POST request
+
 const port = 3000;
 
 app.get('/', (req, res) => {
@@ -27,7 +29,17 @@ app.get('/campgrounds', async (req, res) => {
 
 // This route must be above the id route
 app.get('/campgrounds/new', async (req, res) => {
-  res.render('campgrounds/new'); // renders the 'campground/new' ejs view and pass campground to it.
+  res.render('campgrounds/new'); // renders the 'campground/new' form ejs view
+});
+
+app.post('/campgrounds', async (req, res) => {
+  const data = req.body.campground;
+
+  // Create a new campground
+  const campground = new Campground(data);
+  await campground.save();
+  
+  res.redirect(`/campgrounds/${campground._id}`) // Go to the newly created campground
 });
 
 app.get('/campgrounds/:id', async (req, res) => {
