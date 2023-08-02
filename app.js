@@ -63,10 +63,19 @@ app.put('/campgrounds/:id', async (req, res) => {
   // Update the campground with specific ID
   const campground = await Campground.findOneAndUpdate(
     { _id: id }, // Filter criteria
-    { ...data }, // Updated data
+    { ...data } // Updated data
   );
 
   res.redirect(`/campgrounds/${campground._id}`); // Go to the newly updated campground
+});
+
+app.delete('/campgrounds/:id', async (req, res) => {
+  const { id } = req.params;
+
+  // Delete the campground with specific ID
+  await Campground.findByIdAndDelete(id);
+
+  res.redirect(`/campgrounds`); // Go to the campgrounds
 });
 
 const start = async () => {
