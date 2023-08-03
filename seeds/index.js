@@ -26,7 +26,7 @@ const seedDB = async () => {
       const camp = new Campground({
         location: `${cities[random1000].city}, ${cities[random1000].state}`,
         title: `${sample(descriptors)} ${sample(places)}`,
-        image: `https://source.unsplash.com/random/500x500?camping,${i}`,
+        image: `https://source.unsplash.com/random/600x450?camping,${i}`,
         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, tempora minus.',
         price
       });
