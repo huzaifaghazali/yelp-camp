@@ -1,27 +1,74 @@
 <% layout('layouts/boilerplate') %>
-<h1>Edit Campground</h1>
 <!-- The use of campground[title] and campground[location]  is a way of organizing the form data. When the form is submitted, the server will receive the data in a structured way, where the data for the title will be grouped under the "campground"  -->
 <!-- HTML forms natively support only two HTTP methods: GET and POST. To work around this limitation and enable other HTTP methods like PUT, DELETE, etc., the concept of "method-override" is used. -->
-<form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
-  <div>
-    <label for="title">Title</label>
-    <input
-      type="text"
-      name="campground[title]"
-      id="title"
-      value="<%= campground.title %>"
-    />
-  </div>
-  <div>
-    <label for="location">Location</label>
-    <input
-      type="text"
-      name="campground[location]"
-      id="location"
-      value="<%= campground.location %>"
-    />
-  </div>
-  <button>Update Campground</button>
-</form>
 
-<a href="/campgrounds/<%= campground._id %>">Back To Campgrounds</a>
+<div class="row">
+  <h1 class="mb-3 text-center">Edit Campground</h1>
+  <div class="col-6 offset-3">
+    <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
+      <div class="form-floating mb-3">
+        <input
+          class="form-control"
+          type="text"
+          name="campground[title]"
+          id="title"
+          placeholder="Enter Campground Title"
+          value="<%= campground.title %>"
+        />
+        <label for="title">Title</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          class="form-control"
+          type="text"
+          name="campground[location]"
+          id="location"
+          placeholder="Enter Campground Description"
+          value="<%= campground.location %>"
+        />
+        <label for="location">Location</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          class="form-control"
+          type="text"
+          name="campground[image]"
+          id="image"
+          placeholder="Enter Campground Image Link"
+          value="<%= campground.image %>"
+        />
+        <label for="image">Image Url</label>
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text">$</span>
+        <div id="price-label" class="form-floating">
+          <input
+            type="text"
+            class="form-control"
+            id="price"
+            placeholder="Enter Price"
+            name="campground[price]"
+            aria-describedby="price-label"
+            value="<%= campground.price %>"
+          />
+          <label for="price">Campground Price</label>
+        </div>
+      </div>
+      <div class="form-floating mb-3">
+        <textarea
+          class="form-control"
+          placeholder="Campground Description"
+          name="campground[description]"
+          id="description"
+          style="height: 80px"
+          
+        ><%= campground.description %></textarea>
+        <label for="description">Description</label>
+      </div>
+      <div class="mb-3">
+        <button class="btn btn-info">Update Campground</button>
+      </div>
+    </form>
+    <a href="/campgrounds/<%= campground._id %>">Back To Campgrounds</a>
+  </div>
+</div>
