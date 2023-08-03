@@ -2,6 +2,7 @@
 const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override');
+const ejsMate = require('ejs-mate');
 // Models
 const Campground = require('./models/campgrounds');
 
@@ -10,6 +11,7 @@ const connectDB = require('./db/connect');
 
 const app = express();
 
+app.engine('ejs', ejsMate)
 // sets the 'view engine' and 'views' configuration for the 'app' object.
 app.set('view engine', 'ejs'); // it means, that we'll use the ejs templating engine to render dynamic content.
 app.set('views', path.join(__dirname, 'views')); // views => ejs templates are located. path.join() -> join the current dir name with 'views' dir
