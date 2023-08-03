@@ -11,13 +11,15 @@
       crossorigin="anonymous"
     />
 
-    <title>Document</title>
+    <title>YelpCamp</title>
   </head>
 
-  <body>
-    
-   <%- include('../partials/navbar') %>
+  <body class="d-flex flex-column vh-100">
+    <%- include('../partials/navbar') %>
+
     <main class="container mt-5"><%- body %></main>
+
+    <%- include('../partials/footer') %>
 
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
