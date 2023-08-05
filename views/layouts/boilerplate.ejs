@@ -14,7 +14,7 @@
     <title>YelpCamp</title>
   </head>
 
-  <body class="d-flex flex-column vh-100" style="background-color: #f7f7f7;">
+  <body class="d-flex flex-column vh-100" style="background-color: #f7f7f7">
     <%- include('../partials/navbar') %>
 
     <main class="container mt-5"><%- body %></main>
@@ -31,5 +31,31 @@
       integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      // JavaScript for disabling form submissions if there are invalid fields
+      (() => {
+        'use strict';
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.validated-form');
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach((form) => {
+          form.addEventListener(
+            'submit',
+            (event) => {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              form.classList.add('was-validated');
+            },
+            false
+          );
+        });
+      })();
+    </script>
   </body>
 </html>

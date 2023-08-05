@@ -5,7 +5,13 @@
 <div class="row">
   <h1 class="mb-3 text-center">Edit Campground</h1>
   <div class="col-6 offset-3">
-    <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
+    <form
+      action="/campgrounds/<%= campground._id %>?_method=PUT"
+      method="POST"
+      class="validated-form"
+      novalidate
+    >
+      <!-- Campground Title -->
       <div class="form-floating mb-3">
         <input
           class="form-control"
@@ -14,9 +20,15 @@
           id="title"
           placeholder="Enter Campground Title"
           value="<%= campground.title %>"
+          required
         />
         <label for="title">Title</label>
+
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please enter campground name.</div>
       </div>
+
+      <!-- Campground Location -->
       <div class="form-floating mb-3">
         <input
           class="form-control"
@@ -25,9 +37,15 @@
           id="location"
           placeholder="Enter Campground Description"
           value="<%= campground.location %>"
+          required
         />
         <label for="location">Location</label>
+
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please enter campground location.</div>
       </div>
+
+      <!-- Campground Image url -->
       <div class="form-floating mb-3">
         <input
           class="form-control"
@@ -36,9 +54,15 @@
           id="image"
           placeholder="Enter Campground Image Link"
           value="<%= campground.image %>"
+          required
         />
         <label for="image">Image Url</label>
+
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please enter campground image url.</div>
       </div>
+
+      <!-- Campground Price -->
       <div class="input-group mb-3">
         <span class="input-group-text">$</span>
         <div id="price-label" class="form-floating">
@@ -50,10 +74,15 @@
             name="campground[price]"
             aria-describedby="price-label"
             value="<%= campground.price %>"
+            required
           />
           <label for="price">Campground Price</label>
         </div>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please enter campground price.</div>
       </div>
+
+      <!-- Campground Description -->
       <div class="form-floating mb-3">
         <textarea
           class="form-control"
@@ -61,9 +90,12 @@
           name="campground[description]"
           id="description"
           style="height: 80px"
-          
+          required
         ><%= campground.description %></textarea>
         <label for="description">Description</label>
+
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please enter campground description.</div>
       </div>
       <div class="mb-3">
         <button class="btn btn-info">Update Campground</button>
