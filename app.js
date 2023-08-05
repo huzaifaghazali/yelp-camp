@@ -36,14 +36,18 @@ app.get('/campgrounds/new', async (req, res) => {
   res.render('campgrounds/new'); // renders the 'campground/new' form ejs view
 });
 
-app.post('/campgrounds', async (req, res) => {
-  const data = req.body.campground;
+app.post('/campgrounds', async (req, res, next) => {
+  try {
+    const data = req.body.campground;
 
-  // Create a new campground
-  const campground = new Campground(data);
-  await campground.save();
-
-  res.redirect(`/campgrounds/${campground._id}`); // Go to the newly created campground
+    // Create a new campground
+    const campground = new Campground(data);
+    await campground.save();
+  
+    res.redirect(`/campgrounds/${campground._id}`); // Go to the newly created campground
+  } catch (error) {
+    next(error)
+  }
 });
 
 app.get('/campgrounds/:id', async (req, res) => {
@@ -79,6 +83,10 @@ app.delete('/campgrounds/:id', async (req, res) => {
 
   res.redirect(`/campgrounds`); // Go to the campgrounds
 });
+
+app.use((err, req, res, next) => {
+  res.send('Something went wrong')
+})
 
 const start = async () => {
   try {
