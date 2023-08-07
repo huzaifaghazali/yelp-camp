@@ -11,6 +11,7 @@ const Campground = require('./models/campgrounds');
 const connectDB = require('./db/connect');
 
 // Errors
+const ExpressError = require('./utils/ExpressError');
 const catchAsync = require('./utils/catchAsync');
 
 const app = express();
@@ -40,56 +41,79 @@ app.get('/campgrounds/new', async (req, res) => {
   res.render('campgrounds/new'); // renders the 'campground/new' form ejs view
 });
 
-app.post('/campgrounds', catchAsync(async (req, res, next) => {
+app.post(
+  '/campgrounds',
+  catchAsync(async (req, res, next) => {
+    // Throw error if data doesn't exist then catchAsync will catch it and pass it to middleware.
+    if (!req.body.campground)
+      throw new ExpressError('Invalid Campground data', 400);
 
     const data = req.body.campground;
 
     // Create a new campground
     const campground = new Campground(data);
     await campground.save();
-  
+
     res.redirect(`/campgrounds/${campground._id}`); // Go to the newly created campground
+  })
+);
 
-}));
+app.get(
+  '/campgrounds/:id',
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id); // Get the specific Campground
+    res.render('campgrounds/show', { campground }); // renders the 'campground/show' ejs view and pass campground to it.
+  })
+);
 
-app.get('/campgrounds/:id', catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const campground = await Campground.findById(id); // Get the specific Campground
-  res.render('campgrounds/show', { campground }); // renders the 'campground/show' ejs view and pass campground to it.
-}));
+app.get(
+  '/campgrounds/:id/edit',
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id); // Get the specific Campground
+    res.render('campgrounds/edit', { campground }); // renders the 'campground/edit' ejs view and pass campground to it.
+  })
+);
 
-app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const campground = await Campground.findById(id); // Get the specific Campground
-  res.render('campgrounds/edit', { campground }); // renders the 'campground/edit' ejs view and pass campground to it.
-}));
+app.put(
+  '/campgrounds/:id',
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const data = req.body.campground;
 
-app.put('/campgrounds/:id', catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const data = req.body.campground;
+    // Update the campground with specific ID
+    const campground = await Campground.findOneAndUpdate(
+      { _id: id }, // Filter criteria
+      { ...data } // Updated data
+    );
 
-  // Update the campground with specific ID
-  const campground = await Campground.findOneAndUpdate(
-    { _id: id }, // Filter criteria
-    { ...data } // Updated data
-  );
+    res.redirect(`/campgrounds/${campground._id}`); // Go to the newly updated campground
+  })
+);
 
-  res.redirect(`/campgrounds/${campground._id}`); // Go to the newly updated campground
-}));
+app.delete(
+  '/campgrounds/:id',
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
 
-app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
-  const { id } = req.params;
+    // Delete the campground with specific ID
+    await Campground.findByIdAndDelete(id);
 
-  // Delete the campground with specific ID
-  await Campground.findByIdAndDelete(id);
+    res.redirect(`/campgrounds`); // Go to the campgrounds
+  })
+);
 
-  res.redirect(`/campgrounds`); // Go to the campgrounds
-}));
+// For every request and path. This will only run if the none of the above requests run
+app.all('*', (req, res, next) => {
+  next(new ExpressError('Page Not Found', 404)); // Go the next middleware function. In that case it will go to the error middlware
+});
 
-//  middleware function handle errors. 
+//  middleware function handle errors.
 app.use((err, req, res, next) => {
-  res.send('Something went wrong')
-})
+  const { message = 'Something went wrong', statusCode = 500 } = err; // From ExpressError Class
+  res.status(statusCode).send(message);
+});
 
 const start = async () => {
   try {
