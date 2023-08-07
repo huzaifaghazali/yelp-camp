@@ -3,10 +3,10 @@ const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
-const Joi = require('joi');
 
 // Models
 const Campground = require('./models/campgrounds');
+const { campgroundSchema } = require('./schemas');
 
 // mongoDB
 const connectDB = require('./db/connect');
@@ -28,6 +28,20 @@ app.use(methodOverride('_method')); // Used to override the HTTP methods e.g URL
 
 const port = 3000;
 
+// Joi validation middleware
+const validateCampground = (req, res, next) => {
+  // validation the data as described in validation schema
+  const { error } = campgroundSchema.validate(req.body);
+
+  if (error) {
+    // Throw the error if data is invalid
+    const msg = error.details.map((el) => el.message).join(',');
+    throw new ExpressError(msg, 400);
+  } else {
+    next(); // Go to the next middleware function
+  }
+};
+
 app.get('/', (req, res) => {
   res.render('home'); // renders the 'home' view using the EJS templating
 });
@@ -44,27 +58,11 @@ app.get('/campgrounds/new', async (req, res) => {
 
 app.post(
   '/campgrounds',
+  validateCampground,
   catchAsync(async (req, res, next) => {
     // Throw error if data doesn't exist then catchAsync will catch it and pass it to middleware.
     if (!req.body.campground)
       throw new ExpressError('Invalid Campground data', 400);
-
-    // Added joi validation
-    const campgroundSchema = Joi.object({
-      campground: Joi.object({
-        title: Joi.string().required(),
-        price: Joi.number().required().min(0),
-        image: Joi.string().required(),
-        location: Joi.string().required(),
-      }).required(),
-    });
-
-    const { error } = campgroundSchema.validate(req.body);
-
-    if (error) {
-      const msg = error.details.map((el) => el.message).join(',');
-      throw new ExpressError(msg, 400);
-    }
 
     const data = req.body.campground;
 
@@ -96,6 +94,7 @@ app.get(
 
 app.put(
   '/campgrounds/:id',
+  validateCampground,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const data = req.body.campground;
