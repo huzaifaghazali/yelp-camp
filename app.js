@@ -111,8 +111,9 @@ app.all('*', (req, res, next) => {
 
 //  middleware function handle errors.
 app.use((err, req, res, next) => {
-  const { message = 'Something went wrong', statusCode = 500 } = err; // From ExpressError Class
-  res.status(statusCode).send(message);
+  const { statusCode = 500 } = err; // From ExpressError Class
+  if(!err.message) err.message = 'Oh No, Something Went Wrong!'
+  res.status(statusCode).render('error', { err }); // renders the 'error' ejs view and pass error to it.
 });
 
 const start = async () => {
