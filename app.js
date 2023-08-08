@@ -6,8 +6,8 @@ const ejsMate = require('ejs-mate');
 
 // Models
 const Campground = require('./models/campgrounds');
-const { campgroundSchema } = require('./schemas');
 const Review = require('./models/review');
+const { campgroundSchema, reviewSchema } = require('./schemas');
 
 // mongoDB
 const connectDB = require('./db/connect');
@@ -29,10 +29,24 @@ app.use(methodOverride('_method')); // Used to override the HTTP methods e.g URL
 
 const port = 3000;
 
-// Joi validation middleware
+// Joi validation campground middleware
 const validateCampground = (req, res, next) => {
   // validation the data as described in validation schema
   const { error } = campgroundSchema.validate(req.body);
+
+  if (error) {
+    // Throw the error if data is invalid
+    const msg = error.details.map((el) => el.message).join(',');
+    throw new ExpressError(msg, 400);
+  } else {
+    next(); // Go to the next middleware function
+  }
+};
+
+// Joi validation review middleware
+const validateReview = (req, res, next) => {
+  // validation the data as described in validation schema
+  const { error } = reviewSchema.validate(req.body);
 
   if (error) {
     // Throw the error if data is invalid
@@ -129,22 +143,24 @@ app.delete(
 );
 
 // Create Review
-app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
-  
-  const {id} = req.params;
-  // Get the specific campground 
-  const campground = await Campground.findById(id);
-  // Create review
-  const review = new Review(req.body.review);
-  // Push the review in Campground model
-  campground.reviews.push(review);
+app.post(
+  '/campgrounds/:id/reviews',
+  validateReview,
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    // Get the specific campground
+    const campground = await Campground.findById(id);
+    // Create review
+    const review = new Review(req.body.review);
+    // Push the review in Campground model
+    campground.reviews.push(review);
 
-  await review.save();
-  await campground.save();
+    await review.save();
+    await campground.save();
 
-  res.redirect(`/campgrounds/${campground._id}`); // Go to the campground in which review is created
-
-}))
+    res.redirect(`/campgrounds/${campground._id}`); // Go to the campground in which review is created
+  })
+);
 
 // For every request and path. This will only run if the none of the above requests run
 app.all('*', (req, res, next) => {
