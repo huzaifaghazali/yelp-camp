@@ -96,7 +96,7 @@ app.get(
   '/campgrounds/:id',
   catchAsync(async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findById(id); // Get the specific Campground
+    const campground = await Campground.findById(id).populate('reviews'); // Get the specific Campground and add reviews that are associated with it.
     res.render('campgrounds/show', { campground }); // renders the 'campground/show' ejs view and pass campground to it.
   })
 );
