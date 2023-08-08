@@ -7,6 +7,7 @@ const ejsMate = require('ejs-mate');
 // Models
 const Campground = require('./models/campgrounds');
 const { campgroundSchema } = require('./schemas');
+const Review = require('./models/review');
 
 // mongoDB
 const connectDB = require('./db/connect');
@@ -46,6 +47,7 @@ app.get('/', (req, res) => {
   res.render('home'); // renders the 'home' view using the EJS templating
 });
 
+// Get all the campgrounds
 app.get('/campgrounds', async (req, res) => {
   const campgrounds = await Campground.find({}); // Get all the Campgrounds
   res.render('campgrounds/index', { campgrounds }); // renders the 'campground/index' ejs view and pass campgrounds to it.
@@ -56,6 +58,7 @@ app.get('/campgrounds/new', async (req, res) => {
   res.render('campgrounds/new'); // renders the 'campground/new' form ejs view
 });
 
+// Create Campground
 app.post(
   '/campgrounds',
   validateCampground,
@@ -74,6 +77,7 @@ app.post(
   })
 );
 
+// Get the specific Campground
 app.get(
   '/campgrounds/:id',
   catchAsync(async (req, res) => {
@@ -83,6 +87,7 @@ app.get(
   })
 );
 
+// Get the specific Campground for edit
 app.get(
   '/campgrounds/:id/edit',
   catchAsync(async (req, res) => {
@@ -92,6 +97,7 @@ app.get(
   })
 );
 
+// Update campground
 app.put(
   '/campgrounds/:id',
   validateCampground,
@@ -109,6 +115,7 @@ app.put(
   })
 );
 
+// Delete campground
 app.delete(
   '/campgrounds/:id',
   catchAsync(async (req, res) => {
@@ -120,6 +127,24 @@ app.delete(
     res.redirect(`/campgrounds`); // Go to the campgrounds
   })
 );
+
+// Create Review
+app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+  
+  const {id} = req.params;
+  // Get the specific campground 
+  const campground = await Campground.findById(id);
+  // Create review
+  const review = new Review(req.body.review);
+  // Push the review in Campground model
+  campground.reviews.push(review);
+
+  await review.save();
+  await campground.save();
+
+  res.redirect(`/campgrounds/${campground._id}`); // Go to the campground in which review is created
+
+}))
 
 // For every request and path. This will only run if the none of the above requests run
 app.all('*', (req, res, next) => {
