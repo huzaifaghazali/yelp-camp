@@ -162,6 +162,21 @@ app.post(
   })
 );
 
+// Delete Review
+app.delete(
+  '/campgrounds/:id/reviews/:reviewId',
+  catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+
+    // Delete review
+    await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/campgrounds/${id}`); // Go to the campground in which review is deleted
+  })
+);
+
 // For every request and path. This will only run if the none of the above requests run
 app.all('*', (req, res, next) => {
   next(new ExpressError('Page Not Found', 404)); // Go the next middleware function. In that case it will go to the error middlware
