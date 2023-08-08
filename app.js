@@ -168,7 +168,7 @@ app.delete(
   catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
 
-    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }); // remove the reviewId from the 'reviews' array of the specified campground.
 
     // Delete review
     await Review.findByIdAndDelete(reviewId);
