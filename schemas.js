@@ -14,7 +14,7 @@ module.exports.campgroundSchema = Joi.object({
 // Defines a validation schema when creating review
 module.exports.reviewSchema = Joi.object({
   review: Joi.object({
-    ratting: Joi.number().required().min(1).max(5),
+    rating: Joi.number().required().min(1).max(5),
     body: Joi.string().required(),
   }).required(),
 });
