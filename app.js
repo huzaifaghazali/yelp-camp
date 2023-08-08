@@ -136,7 +136,7 @@ app.delete(
     const { id } = req.params;
 
     // Delete the campground with specific ID
-    await Campground.findByIdAndDelete(id);
+    await Campground.findByIdAndDelete(id); // This will trigger the mongoose findOneAndDelete middleware
 
     res.redirect(`/campgrounds`); // Go to the campgrounds
   })
