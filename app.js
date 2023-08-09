@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
+const session = require('express-session');
 
 // Routes
 const campgroundRoutes = require('./routes/campgrounds');
@@ -25,6 +26,17 @@ app.set('views', path.join(__dirname, 'views')); // views => ejs templates are l
 app.use(express.urlencoded({ extended: true })); // URL-encoded data from the body of a POST request
 app.use(methodOverride('_method')); // Used to override the HTTP methods e.g URLs like /route?_method=PUT.
 app.use(express.static(path.join(__dirname, 'public'))); //  serving static files from a directory to the client's browser
+const sessionConfig = {
+  secret: 'sessionsecret',
+  resave: false, // to save the session data
+  saveUninitialized: true, //  to save sessions that are new and haven't been modified.
+  coookie: {
+    httpOnly: true, // estricts access to the session cookie only through the HTTP
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  },
+};
+app.use(session(sessionConfig)); // Set the express session
 
 const port = 3000;
 
