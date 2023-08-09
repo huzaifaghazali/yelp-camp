@@ -89,6 +89,7 @@ router.put(
       { ...data } // Updated data
     );
 
+    req.flash('success', 'Successfully updated campground!'); // sets up a flash message with the type "success" in the req object
     res.redirect(`/campgrounds/${campground._id}`); // Go to the newly updated campground
   })
 );
@@ -102,6 +103,7 @@ router.delete(
     // Delete the campground with specific ID
     await Campground.findByIdAndDelete(id); // This will trigger the mongoose findOneAndDelete middleware
 
+    req.flash('success', 'Successfully Deleted a campground!'); // sets up a flash message with the type "success" in the req object
     res.redirect(`/campgrounds`); // Go to the campgrounds
   })
 );

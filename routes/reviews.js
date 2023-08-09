@@ -41,6 +41,7 @@ router.post(
     await review.save();
     await campground.save();
 
+    req.flash('success', 'Created a new review!'); // sets up a flash message with the type "success" in the req object
     res.redirect(`/campgrounds/${campground._id}`); // Go to the campground in which review is created
   })
 );
@@ -56,6 +57,7 @@ router.delete(
     // Delete review
     await Review.findByIdAndDelete(reviewId);
 
+    req.flash('success', 'Successfully Deleted a review!'); // sets up a flash message with the type "success" in the req object
     res.redirect(`/campgrounds/${id}`); // Go to the campground in which review is deleted
   })
 );
