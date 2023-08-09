@@ -12,19 +12,17 @@ const catchAsync = require('../utils/catchAsync');
 
 // Joi validation campground middleware
 const validateCampground = (req, res, next) => {
-   // validation the data as described in validation schema
-   const { error } = campgroundSchema.validate(req.body);
- 
-   if (error) {
-     // Throw the error if data is invalid
-     const msg = error.details.map((el) => el.message).join(',');
-     throw new ExpressError(msg, 400);
-   } else {
-     next(); // Go to the next middleware function
-   }
- };
+  // validation the data as described in validation schema
+  const { error } = campgroundSchema.validate(req.body);
 
- 
+  if (error) {
+    // Throw the error if data is invalid
+    const msg = error.details.map((el) => el.message).join(',');
+    throw new ExpressError(msg, 400);
+  } else {
+    next(); // Go to the next middleware function
+  }
+};
 
 // Get all the campgrounds
 router.get('/', async (req, res) => {
@@ -52,6 +50,7 @@ router.post(
     const campground = new Campground(data);
     await campground.save();
 
+    req.flash('success', 'Successfully made a new campground!'); // sets up a flash message with the type "success" in the req object
     res.redirect(`/campgrounds/${campground._id}`); // Go to the newly created campground
   })
 );
@@ -106,6 +105,5 @@ router.delete(
     res.redirect(`/campgrounds`); // Go to the campgrounds
   })
 );
-
 
 module.exports = router;

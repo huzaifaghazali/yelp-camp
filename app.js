@@ -4,6 +4,7 @@ const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+const flash = require('connect-flash');
 
 // Routes
 const campgroundRoutes = require('./routes/campgrounds');
@@ -36,7 +37,15 @@ const sessionConfig = {
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };
-app.use(session(sessionConfig)); // Set the express session
+app.use(session(sessionConfig)); // Set the express session middleware
+app.use(flash()); // Set the flash middleware
+
+app.use((req, res, next) => {
+  // The res.locals object is a way to pass data from the server to the view template. Two properties (success and error) are added to the res.locals
+  res.locals.success = req.flash('success'); // takes any "success" flash messages stored in the request (if any) and assigns them to the success property
+  res.locals.error = req.flash('error'); // takes any "error" flash messages stored in the request (if any) and assigns them to the error property
+  next();
+});
 
 const port = 3000;
 
