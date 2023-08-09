@@ -61,6 +61,12 @@ router.get(
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id).populate('reviews'); // Get the specific Campground and add reviews that are associated with it.
+
+    // If there is no campground
+    if(!campground) {
+      req.flash('error', 'Cannot find that campground'); // sets up a flash message with the type "error" in the req object
+      return res.redirect(`/campgrounds/`); // Go campground
+    }
     res.render('campgrounds/show', { campground }); // renders the 'campground/show' ejs view and pass campground to it.
   })
 );
@@ -71,6 +77,13 @@ router.get(
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id); // Get the specific Campground
+
+    // If there is no campground
+    if(!campground) {
+      req.flash('error', 'Cannot find that campground'); // sets up a flash message with the type "error" in the req object
+      return res.redirect(`/campgrounds/`); // Go campground
+    }
+
     res.render('campgrounds/edit', { campground }); // renders the 'campground/edit' ejs view and pass campground to it.
   })
 );
