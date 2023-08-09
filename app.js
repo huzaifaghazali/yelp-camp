@@ -13,7 +13,6 @@ const connectDB = require('./db/connect');
 
 // Errors
 const ExpressError = require('./utils/ExpressError');
-const catchAsync = require('./utils/catchAsync');
 
 const app = express();
 
@@ -25,6 +24,7 @@ app.set('views', path.join(__dirname, 'views')); // views => ejs templates are l
 // Middleware
 app.use(express.urlencoded({ extended: true })); // URL-encoded data from the body of a POST request
 app.use(methodOverride('_method')); // Used to override the HTTP methods e.g URLs like /route?_method=PUT.
+app.use(express.static(path.join(__dirname, 'public'))); //  serving static files from a directory to the client's browser
 
 const port = 3000;
 
