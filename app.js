@@ -4,13 +4,9 @@ const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 
-// Models
-const Campground = require('./models/campgrounds');
-const Review = require('./models/review');
-const { campgroundSchema, reviewSchema } = require('./schemas');
-
-// Routes 
+// Routes
 const campgroundRoutes = require('./routes/campgrounds');
+const reviewRoutes = require('./routes/reviews');
 
 // mongoDB
 const connectDB = require('./db/connect');
@@ -32,62 +28,13 @@ app.use(methodOverride('_method')); // Used to override the HTTP methods e.g URL
 
 const port = 3000;
 
-
-// Joi validation review middleware
-const validateReview = (req, res, next) => {
-  // validation the data as described in validation schema
-  const { error } = reviewSchema.validate(req.body);
-
-  if (error) {
-    // Throw the error if data is invalid
-    const msg = error.details.map((el) => el.message).join(',');
-    throw new ExpressError(msg, 400);
-  } else {
-    next(); // Go to the next middleware function
-  }
-};
-
 app.get('/', (req, res) => {
   res.render('home'); // renders the 'home' view using the EJS templating
 });
 
 // Router middleware
 app.use('/campgrounds', campgroundRoutes);
-
-// Create Review
-app.post(
-  '/campgrounds/:id/reviews',
-  validateReview,
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    // Get the specific campground
-    const campground = await Campground.findById(id);
-    // Create review
-    const review = new Review(req.body.review);
-    // Push the review in Campground model
-    campground.reviews.push(review);
-
-    await review.save();
-    await campground.save();
-
-    res.redirect(`/campgrounds/${campground._id}`); // Go to the campground in which review is created
-  })
-);
-
-// Delete Review
-app.delete(
-  '/campgrounds/:id/reviews/:reviewId',
-  catchAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-
-    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }); // remove the reviewId from the 'reviews' array of the specified campground.
-
-    // Delete review
-    await Review.findByIdAndDelete(reviewId);
-
-    res.redirect(`/campgrounds/${id}`); // Go to the campground in which review is deleted
-  })
-);
+app.use('/campgrounds/:id/reviews', reviewRoutes);
 
 // For every request and path. This will only run if the none of the above requests run
 app.all('*', (req, res, next) => {
