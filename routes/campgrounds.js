@@ -15,26 +15,28 @@ const {
 
 // Middleware
 const { validateCampground } = require('../middleware/campground');
+const { isLoggedIn } = require('../middleware/authenticate');
 
 // Get all the campgrounds
 router.get('/', showCampgrounds);
 
 // This route must be above the id route
-router.get('/new', createCampgroundForm);
+// Authenticate the user then show form
+router.get('/new', isLoggedIn, createCampgroundForm);
 
-// Check validations then Create Campground
-router.post('/', validateCampground, createCampground);
+// Authenticate the user Check validations then Create Campground
+router.post('/', isLoggedIn, validateCampground, createCampground);
 
-// Get the specific Campground
+// Authenticate the user Get the specific Campground
 router.get('/:id', singleCampground);
 
 // Get the specific Campground for edit
-router.get('/:id/edit', editCampgroundForm);
+router.get('/:id/edit', isLoggedIn, editCampgroundForm);
 
 // Check validations then Update campground
-router.put('/:id', validateCampground, updateCampground);
+router.put('/:id', isLoggedIn, validateCampground, updateCampground);
 
 // Delete campground
-router.delete('/:id', deleteCampground);
+router.delete('/:id', isLoggedIn, deleteCampground);
 
 module.exports = router;
