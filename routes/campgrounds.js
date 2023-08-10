@@ -2,111 +2,39 @@
 const express = require('express');
 const router = express.Router();
 
-// Model
-const Campground = require('../models/campgrounds');
+// Controllers
+const {
+  showCampgrounds,
+  createCampgroundForm,
+  createCampground,
+  singleCampground,
+  editCampgroundForm,
+  updateCampground,
+  deleteCampground,
+} = require('../controllers/campground');
 
 // Middleware
 const { validateCampground } = require('../middleware/campground');
 
-// Errors
-const ExpressError = require('../utils/ExpressError');
-const catchAsync = require('../utils/catchAsync');
-
 // Get all the campgrounds
-router.get('/', async (req, res) => {
-  const campgrounds = await Campground.find({}); // Get all the Campgrounds
-  res.render('campgrounds/index', { campgrounds }); // renders the 'campground/index' ejs view and pass campgrounds to it.
-});
+router.get('/', showCampgrounds);
 
 // This route must be above the id route
-router.get('/new', async (req, res) => {
-  res.render('campgrounds/new'); // renders the 'campground/new' form ejs view
-});
+router.get('/new', createCampgroundForm);
 
-// Create Campground
-router.post(
-  '/',
-  validateCampground,
-  catchAsync(async (req, res, next) => {
-    // Throw error if data doesn't exist then catchAsync will catch it and pass it to middleware.
-    if (!req.body.campground)
-      throw new ExpressError('Invalid Campground data', 400);
-
-    const data = req.body.campground;
-
-    // Create a new campground
-    const campground = new Campground(data);
-    await campground.save();
-
-    req.flash('success', 'Successfully made a new campground!'); // sets up a flash message with the type "success" in the req object
-    res.redirect(`/campgrounds/${campground._id}`); // Go to the newly created campground
-  })
-);
+// Check validations then Create Campground
+router.post('/', validateCampground, createCampground);
 
 // Get the specific Campground
-router.get(
-  '/:id',
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id).populate('reviews'); // Get the specific Campground and add reviews that are associated with it.
-
-    // If there is no campground
-    if(!campground) {
-      req.flash('error', 'Cannot find that campground'); // sets up a flash message with the type "error" in the req object
-      return res.redirect(`/campgrounds/`); // Go campground
-    }
-    res.render('campgrounds/show', { campground }); // renders the 'campground/show' ejs view and pass campground to it.
-  })
-);
+router.get('/:id', singleCampground);
 
 // Get the specific Campground for edit
-router.get(
-  '/:id/edit',
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id); // Get the specific Campground
+router.get('/:id/edit', editCampgroundForm);
 
-    // If there is no campground
-    if(!campground) {
-      req.flash('error', 'Cannot find that campground'); // sets up a flash message with the type "error" in the req object
-      return res.redirect(`/campgrounds/`); // Go campground
-    }
-
-    res.render('campgrounds/edit', { campground }); // renders the 'campground/edit' ejs view and pass campground to it.
-  })
-);
-
-// Update campground
-router.put(
-  '/:id',
-  validateCampground,
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const data = req.body.campground;
-
-    // Update the campground with specific ID
-    const campground = await Campground.findOneAndUpdate(
-      { _id: id }, // Filter criteria
-      { ...data } // Updated data
-    );
-
-    req.flash('success', 'Successfully updated campground!'); // sets up a flash message with the type "success" in the req object
-    res.redirect(`/campgrounds/${campground._id}`); // Go to the newly updated campground
-  })
-);
+// Check validations then Update campground
+router.put('/:id', validateCampground, updateCampground);
 
 // Delete campground
-router.delete(
-  '/:id',
-  catchAsync(async (req, res) => {
-    const { id } = req.params;
-
-    // Delete the campground with specific ID
-    await Campground.findByIdAndDelete(id); // This will trigger the mongoose findOneAndDelete middleware
-
-    req.flash('success', 'Successfully Deleted a campground!'); // sets up a flash message with the type "success" in the req object
-    res.redirect(`/campgrounds`); // Go to the campgrounds
-  })
-);
+router.delete('/:id', deleteCampground);
 
 module.exports = router;
