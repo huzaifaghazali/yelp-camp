@@ -11,6 +11,7 @@ const LocalStrategy = require('passport-local');
 // Routes
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
+const userRoutes = require('./routes/users');
 
 // mongoDB
 const connectDB = require('./db/connect');
@@ -71,6 +72,7 @@ app.get('/', (req, res) => {
 // Router middleware
 app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/reviews', reviewRoutes);
+app.use('/', userRoutes)
 
 // For every request and path. This will only run if the none of the above requests run
 app.all('*', (req, res, next) => {
