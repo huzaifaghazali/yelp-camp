@@ -5,6 +5,8 @@ const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
 
 // Routes
 const campgroundRoutes = require('./routes/campgrounds');
@@ -12,6 +14,9 @@ const reviewRoutes = require('./routes/reviews');
 
 // mongoDB
 const connectDB = require('./db/connect');
+
+// Model
+const User = require('./models/user');
 
 // Errors
 const ExpressError = require('./utils/ExpressError');
@@ -32,13 +37,23 @@ const sessionConfig = {
   resave: false, // to save the session data
   saveUninitialized: true, //  to save sessions that are new and haven't been modified.
   coookie: {
-    httpOnly: true, // estricts access to the session cookie only through the HTTP
+    httpOnly: true, // restricts access to the session cookie only through the HTTP
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };
 app.use(session(sessionConfig)); // Set the express session middleware
 app.use(flash()); // Set the flash middleware
+app.use(passport.initialize()); // initializes Passport and sets it up to work application.
+app.use(passport.session()); // enables Passport to manage user sessions, allowing you to keep track of authenticated users across requests.
+
+// sets up a local authentication strategy
+passport.use(new LocalStrategy(User.authenticate())); // User.authenticate() is a method provided by passport-local-mongoose
+// configures the serialization(saving it to session) and deserialization(from the session) of user data
+
+// User.serializeUser() & User.deserializeUser() are methods provided by passport-local-mongoose
+passport.serializeUser(User.serializeUser()); // determines which data to store in the session to identify the user.
+passport.deserializeUser(User.deserializeUser()); // retrieves user data from the session based on the serialized user data.
 
 app.use((req, res, next) => {
   // The res.locals object is a way to pass data from the server to the view template. Two properties (success and error) are added to the res.locals
