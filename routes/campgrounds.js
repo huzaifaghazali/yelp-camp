@@ -4,25 +4,13 @@ const router = express.Router();
 
 // Model
 const Campground = require('../models/campgrounds');
-const { campgroundSchema } = require('../schemas');
+
+// Middleware
+const { validateCampground } = require('../middleware/campground');
 
 // Errors
 const ExpressError = require('../utils/ExpressError');
 const catchAsync = require('../utils/catchAsync');
-
-// Joi validation campground middleware
-const validateCampground = (req, res, next) => {
-  // validation the data as described in validation schema
-  const { error } = campgroundSchema.validate(req.body);
-
-  if (error) {
-    // Throw the error if data is invalid
-    const msg = error.details.map((el) => el.message).join(',');
-    throw new ExpressError(msg, 400);
-  } else {
-    next(); // Go to the next middleware function
-  }
-};
 
 // Get all the campgrounds
 router.get('/', async (req, res) => {
