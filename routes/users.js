@@ -12,6 +12,9 @@ const {
   logoutUser
 } = require('../controllers/user');
 
+// middleware 
+const { storeReturnTo } = require('../middleware/authenticate');
+
 // Show the Register form
 router.get('/register', showRegisterForm);
 
@@ -25,6 +28,7 @@ router.get('/login', showLoginForm);
 // provided by Passport.js to authenticate users
 router.post(
   '/login',
+  storeReturnTo,
   passport.authenticate('local', {
     // the strategy used is 'local', which typically refers to local username and password authentication.
     failureFlash: true, // on failure display a flash message

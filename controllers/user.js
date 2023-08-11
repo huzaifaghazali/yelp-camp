@@ -38,7 +38,9 @@ const showLoginForm = (req, res) => {
 const loginUser = catchAsync(async (req, res) => {
   try {
     req.flash('success', 'Welcome Back!');
-    res.redirect('/campgrounds');
+    const redirectUrl = res.locals.returnTo || '/campgrounds';
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);
   } catch (error) {
     req.flash('error', error.message);
     res.redirect('/login');
