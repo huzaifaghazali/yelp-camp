@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const User = require('../models/user');
-const catchAsync = require('../utils/catchAsync');
 const passport = require('passport');
 
 // Controllers
@@ -23,11 +21,13 @@ router.post('/register', registerUser);
 router.get('/login', showLoginForm);
 
 // Login user.
+// provided by Passport.js to authenticate users
 router.post(
   '/login',
   passport.authenticate('local', {
-    failureFlash: true,
-    failureRedirect: '/login',
+    // the strategy used is 'local', which typically refers to local username and password authentication.
+    failureFlash: true, // on failure display a flash message
+    failureRedirect: '/login', // redirect back to login
   }),
   loginUser
 );
