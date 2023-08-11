@@ -43,6 +43,7 @@ const loginUser = catchAsync(async (req, res) => {
 
 // Logout the user
 const logoutUser = (req, res, next) => {
+  // method provided by Passport.js that logs out the currently authenticated user.
   req.logout(function (err) {
     if (err) {
       return next(err);
