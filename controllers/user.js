@@ -17,8 +17,12 @@ const registerUser = catchAsync(async (req, res) => {
     const user = new User({ email, username });
     // method User.register() handles the process of creating a new user document, hashing the password, and saving it to the database.
     const registeredUser = await User.register(user, password); // registers a new user using the User.register() method provided by passport-local-mongoose.
-    req.flash('success', 'Welcome to Yelp Camp!');
-    res.redirect('/campgrounds');
+    // req.login() method is provided by Passport.js to log in a user after they have successfully registered.
+    req.login(registeredUser, (err) => {
+      if (err) return next(err);
+      req.flash('success', 'Welcome to Yelp Camp!');
+      res.redirect('/campgrounds');
+    });
   } catch (error) {
     req.flash('error', error.message);
     res.redirect('/register');
