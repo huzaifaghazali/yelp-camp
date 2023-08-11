@@ -9,6 +9,7 @@ const {
   registerUser,
   showLoginForm,
   loginUser,
+  logoutUser
 } = require('../controllers/user');
 
 // Show the Register form
@@ -31,5 +32,8 @@ router.post(
   }),
   loginUser
 );
+
+// Logout user
+router.get('/logout', logoutUser)
 
 module.exports = router;

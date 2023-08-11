@@ -41,9 +41,21 @@ const loginUser = catchAsync(async (req, res) => {
   }
 });
 
+// Logout the user
+const logoutUser = (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    req.flash('success', 'Goodbye!');
+    res.redirect('/campgrounds');
+  });
+};
+
 module.exports = {
   showRegisterForm,
   registerUser,
   showLoginForm,
-  loginUser
+  loginUser,
+  logoutUser,
 };
