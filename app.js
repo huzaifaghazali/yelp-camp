@@ -57,7 +57,8 @@ passport.serializeUser(User.serializeUser()); // determines which data to store 
 passport.deserializeUser(User.deserializeUser()); // retrieves user data from the session based on the serialized user data.
 
 app.use((req, res, next) => {
-  // The res.locals object is a way to pass data from the server to the view template. Two properties (success and error) are added to the res.locals
+  // The res.locals object is a way to pass data from the server to the view template. Three properties ( currentUser, success and error) are added to the res.locals
+  res.locals.currentUser = req.user; // req.user object is typically set by Passport.js after a user is authenticated. It represents the currently authenticated user.
   res.locals.success = req.flash('success'); // takes any "success" flash messages stored in the request (if any) and assigns them to the success property
   res.locals.error = req.flash('error'); // takes any "error" flash messages stored in the request (if any) and assigns them to the error property
   next();
@@ -72,7 +73,7 @@ app.get('/', (req, res) => {
 // Router middleware
 app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/reviews', reviewRoutes);
-app.use('/', userRoutes)
+app.use('/', userRoutes);
 
 // For every request and path. This will only run if the none of the above requests run
 app.all('*', (req, res, next) => {
