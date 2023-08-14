@@ -7,11 +7,12 @@ const { createReview, deleteReview } = require('../controllers/review');
 
 // Middleware
 const { validateReview } = require('../middleware/campground');
+const { isLoggedIn } = require('../middleware/authenticate');
 
-// Create Review
-router.post('/', validateReview, createReview);
+// Authenticate the user then Create Review
+router.post('/', isLoggedIn, validateReview, createReview);
 
-// Delete Review
-router.delete('/:reviewId', deleteReview);
+// Authenticate the user then Delete Review
+router.delete('/:reviewId', isLoggedIn, deleteReview);
 
 module.exports = router;

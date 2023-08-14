@@ -12,6 +12,7 @@ const createReview = catchAsync(async (req, res) => {
   const campground = await Campground.findById(id);
   // Create review
   const review = new Review(req.body.review);
+  review.author = req.user._id; // Associate the newly created review with logged user
   // Push the review in Campground model
   campground.reviews.push(review);
 
