@@ -8,6 +8,10 @@ const CampgroundSchema = new Schema({
   price: Number,
   description: String,
   location: String,
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   // Each One Campground has many reviews. Each Campground object can have an array of Review references
   reviews: [
     {

@@ -25,6 +25,7 @@ const createCampground = catchAsync(async (req, res, next) => {
 
   // Create a new campground
   const campground = new Campground(data);
+  campground.author = req.user._id; // Associate the newly created campground with logged user
   await campground.save();
 
   req.flash('success', 'Successfully made a new campground!'); // sets up a flash message with the type "success" in the req object
@@ -34,7 +35,7 @@ const createCampground = catchAsync(async (req, res, next) => {
 // Get Single Campground
 const singleCampground = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const campground = await Campground.findById(id).populate('reviews'); // Get the specific Campground and add reviews that are associated with it.
+  const campground = await Campground.findById(id).populate('reviews').populate('author'); // Get the specific Campground and add reviews that are associated with it and author who created the campground.
 
   // If there is no campground
   if (!campground) {
