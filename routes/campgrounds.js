@@ -15,7 +15,7 @@ const {
 
 // Middleware
 const { validateCampground } = require('../middleware/campground');
-const { isLoggedIn } = require('../middleware/authenticate');
+const { isLoggedIn,isAuthor } = require('../middleware/authenticate');
 
 // Get all the campgrounds
 router.get('/', showCampgrounds);
@@ -30,13 +30,13 @@ router.post('/', isLoggedIn, validateCampground, createCampground);
 // Authenticate the user Get the specific Campground
 router.get('/:id', singleCampground);
 
-// Get the specific Campground for edit
-router.get('/:id/edit', isLoggedIn, editCampgroundForm);
+// Authenticate the user then check permissions Then Get the specific Campground for edit(Edit form)
+router.get('/:id/edit', isLoggedIn, isAuthor, editCampgroundForm);
 
-// Check validations then Update campground
-router.put('/:id', isLoggedIn, validateCampground, updateCampground);
+// Authenticate the user then check permissions Check validations then Update campground
+router.put('/:id', isLoggedIn, isAuthor, validateCampground, updateCampground);
 
-// Delete campground
-router.delete('/:id', isLoggedIn, deleteCampground);
+// Authenticate the user then check permissions then Delete campground
+router.delete('/:id', isLoggedIn, isAuthor, deleteCampground);
 
 module.exports = router;

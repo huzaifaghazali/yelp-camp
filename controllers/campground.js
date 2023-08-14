@@ -4,6 +4,8 @@ const Campground = require('../models/campgrounds');
 // Errors
 const catchAsync = require('../utils/catchAsync');
 
+
+
 // Get all the campgrounds
 const showCampgrounds = async (req, res) => {
   const campgrounds = await Campground.find({}); // Get all the Campgrounds
@@ -58,12 +60,6 @@ const editCampgroundForm = catchAsync(async (req, res) => {
     return res.redirect(`/campgrounds/`); // Go campground
   }
 
-  // Check if Logged in user and campground user(who created) have same ID
-  if (!campground.author.equals(req.user._id)) {
-    req.flash('error', 'You do not have permission to do that!');
-    return res.redirect(`/campgrounds/${campground._id}`);
-  }
-
   res.render('campgrounds/edit', { campground }); // renders the 'campground/edit' ejs view and pass campground to it.
 });
 
@@ -72,16 +68,8 @@ const updateCampground = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = req.body.campground;
 
-  const campground = await Campground.findById(id);
-
-  // Check if Logged in user and campground user(who created) have same ID
-  if (!campground.author.equals(req.user._id)) {
-    req.flash('error', 'You do not have permission to do that!');
-    return res.redirect(`/campgrounds/${campground._id}`);
-  }
-
   // Update the campground with specific ID
-  const camp = await Campground.findOneAndUpdate(
+  const campground = await Campground.findOneAndUpdate(
     { _id: id }, // Filter criteria
     { ...data } // Updated data
   );
