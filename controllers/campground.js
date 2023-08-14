@@ -4,8 +4,6 @@ const Campground = require('../models/campgrounds');
 // Errors
 const catchAsync = require('../utils/catchAsync');
 
-
-
 // Get all the campgrounds
 const showCampgrounds = async (req, res) => {
   const campgrounds = await Campground.find({}); // Get all the Campgrounds
@@ -38,8 +36,14 @@ const createCampground = catchAsync(async (req, res, next) => {
 const singleCampground = catchAsync(async (req, res) => {
   const { id } = req.params;
   const campground = await Campground.findById(id)
-    .populate('reviews')
-    .populate('author'); // Get the specific Campground and add reviews that are associated with it and author who created the campground.
+    .populate({
+      path: 'reviews',
+      populate: {
+        path: 'author',
+      },
+    })
+    .populate('author');
+  // Get the specific Campground and add reviews that are associated with it and author who created the campground.
 
   // If there is no campground
   if (!campground) {
