@@ -9,35 +9,32 @@ const {
   registerUser,
   showLoginForm,
   loginUser,
-  logoutUser
+  logoutUser,
 } = require('../controllers/user');
 
-// middleware 
+// middleware
 const { storeReturnTo } = require('../middleware/authenticate');
 
-// Show the Register form
-router.get('/register', showRegisterForm);
+router
+  .route('/register')
+  .get(showRegisterForm) // Show the Register form
+  .post(registerUser); // Register a new user.
 
-// Register a new user.
-router.post('/register', registerUser);
-
-// Show the Login form
-router.get('/login', showLoginForm);
-
-// Login user.
-// provided by Passport.js to authenticate users
-router.post(
-  '/login',
-  storeReturnTo,
-  passport.authenticate('local', {
-    // the strategy used is 'local', which typically refers to local username and password authentication.
-    failureFlash: true, // on failure display a flash message
-    failureRedirect: '/login', // redirect back to login
-  }),
-  loginUser
-);
+router
+  .route('/login')
+  .get(showLoginForm) // Show the Login form
+  .post(
+    storeReturnTo, // Store the path
+    // provided by Passport.js to authenticate users
+    passport.authenticate('local', {
+      // the strategy used is 'local', which typically refers to local username and password authentication.
+      failureFlash: true, // on failure display a flash message
+      failureRedirect: '/login', // redirect back to login
+    }),
+    loginUser // Login user.
+  );
 
 // Logout user
-router.get('/logout', logoutUser)
+router.get('/logout', logoutUser);
 
 module.exports = router;
