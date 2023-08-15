@@ -15,28 +15,24 @@ const {
 
 // Middleware
 const { validateCampground } = require('../middleware/campground');
-const { isLoggedIn,isAuthor } = require('../middleware/authenticate');
+const { isLoggedIn, isAuthor } = require('../middleware/authenticate');
 
-// Get all the campgrounds
-router.get('/', showCampgrounds);
+router
+  .route('/')
+  .get(showCampgrounds) // Get all the campgrounds
+  .post(isLoggedIn, validateCampground, createCampground); // Authenticate the user Check validations then Create Campground
 
 // This route must be above the id route
 // Authenticate the user then show form
 router.get('/new', isLoggedIn, createCampgroundForm);
 
-// Authenticate the user Check validations then Create Campground
-router.post('/', isLoggedIn, validateCampground, createCampground);
-
-// Authenticate the user Get the specific Campground
-router.get('/:id', singleCampground);
+router
+  .route('/:id')
+  .get(singleCampground) // Authenticate the user Get the specific Campground
+  .put(isLoggedIn, isAuthor, validateCampground, updateCampground) // Authenticate the user then check permissions Check validations then Update campground
+  .delete(isLoggedIn, isAuthor, deleteCampground); // Authenticate the user then check permissions then Delete campground
 
 // Authenticate the user then check permissions Then Get the specific Campground for edit(Edit form)
 router.get('/:id/edit', isLoggedIn, isAuthor, editCampgroundForm);
-
-// Authenticate the user then check permissions Check validations then Update campground
-router.put('/:id', isLoggedIn, isAuthor, validateCampground, updateCampground);
-
-// Authenticate the user then check permissions then Delete campground
-router.delete('/:id', isLoggedIn, isAuthor, deleteCampground);
 
 module.exports = router;
