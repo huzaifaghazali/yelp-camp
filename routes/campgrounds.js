@@ -26,11 +26,7 @@ const { isLoggedIn, isAuthor } = require('../middleware/authenticate');
 router
   .route('/')
   .get(showCampgrounds) // Get all the campgrounds
-  // .post(isLoggedIn, validateCampground, createCampground) // Authenticate the user Check validations then Create Campground
-  .post(upload.array('image'), (req, res) => {
-    console.log(req.body, req.files);
-    res.send('it worked');
-  });
+  .post(isLoggedIn, upload.array('image'), validateCampground, createCampground) // Authenticate the user Check validations then Create Campground
 
 // This route must be above the id route
 // Authenticate the user then show form

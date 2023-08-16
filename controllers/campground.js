@@ -25,9 +25,9 @@ const createCampground = catchAsync(async (req, res, next) => {
 
   // Create a new campground
   const campground = new Campground(data);
+  campground.images =   req.files.map((f) => ({ url: f.path, filename: f.filename })); // Store the image path and filename from cloudinary
   campground.author = req.user._id; // Associate the newly created campground with logged user
   await campground.save();
-
   req.flash('success', 'Successfully made a new campground!'); // sets up a flash message with the type "success" in the req object
   res.redirect(`/campgrounds/${campground._id}`); // Go to the newly created campground
 });
