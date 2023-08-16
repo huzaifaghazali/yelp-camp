@@ -2,7 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer'); // handling multipart/form-data,
-const upload = multer({ dest: 'uploads/' }); // destination in which files are uploaded
+
+const { storage } = require('../cloudinary');
+const upload = multer({ storage }); // destination in which files are uploaded
 
 // Controllers
 const {
@@ -27,8 +29,8 @@ router
   // .post(isLoggedIn, validateCampground, createCampground) // Authenticate the user Check validations then Create Campground
   .post(upload.array('image'), (req, res) => {
     console.log(req.body, req.files);
-    res.send('it worked')
-  })
+    res.send('it worked');
+  });
 
 // This route must be above the id route
 // Authenticate the user then show form
