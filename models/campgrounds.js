@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Review = require('./review')
 const Schema = mongoose.Schema;
 
+const { cloudinary } = require('../cloudinary');
+
 const CampgroundSchema = new Schema({
   title: String,
   images: [
@@ -31,6 +33,12 @@ const CampgroundSchema = new Schema({
 CampgroundSchema.post('findOneAndDelete', async function(doc) {
   // If document is deleted
   if(doc) {
+
+    // Delete Images from cloudinary
+    for (let img of doc.images) {
+      await cloudinary.uploader.destroy(img.filename);
+    }
+
     // Delete all reviews where there ID is in doc.reviews
     await Review.deleteMany({
       _id: {
