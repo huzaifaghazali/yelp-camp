@@ -26,7 +26,12 @@ const { isLoggedIn, isAuthor } = require('../middleware/authenticate');
 router
   .route('/')
   .get(showCampgrounds) // Get all the campgrounds
-  .post(isLoggedIn, upload.array('image'), validateCampground, createCampground) // Authenticate the user Check validations then Create Campground
+  .post(
+    isLoggedIn,
+    upload.array('image'),
+    validateCampground,
+    createCampground
+  ); // Authenticate the user Check validations then Create Campground
 
 // This route must be above the id route
 // Authenticate the user then show form
@@ -35,7 +40,13 @@ router.get('/new', isLoggedIn, createCampgroundForm);
 router
   .route('/:id')
   .get(singleCampground) // Authenticate the user Get the specific Campground
-  .put(isLoggedIn, isAuthor, validateCampground, updateCampground) // Authenticate the user then check permissions Check validations then Update campground
+  .put(
+    isLoggedIn,
+    isAuthor,
+    upload.array('image'),
+    validateCampground,
+    updateCampground
+  ) // Authenticate the user then check permissions Check validations then Update campground
   .delete(isLoggedIn, isAuthor, deleteCampground); // Authenticate the user then check permissions then Delete campground
 
 // Authenticate the user then check permissions Then Get the specific Campground for edit(Edit form)

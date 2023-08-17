@@ -10,6 +10,7 @@
       method="POST"
       class="validated-form"
       novalidate
+      enctype="multipart/form-data"
     >
       <!-- Campground Title -->
       <div class="form-floating mb-3">
@@ -46,17 +47,15 @@
       </div>
 
       <!-- Campground Image url -->
-      <div class="form-floating mb-3">
+      <div class="mb-3">
+        <label for="image">Add Images</label>
         <input
           class="form-control"
-          type="text"
-          name="campground[image]"
+          type="file"
+          name="image"
           id="image"
-          placeholder="Enter Campground Image Link"
-          value="<%= campground.image %>"
-          required
+          multiple
         />
-        <label for="image">Image Url</label>
 
         <div class="valid-feedback">Looks good!</div>
         <div class="invalid-feedback">Please enter campground image url.</div>
