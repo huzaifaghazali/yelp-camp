@@ -2,7 +2,7 @@
 <!-- The use of campground[title] and campground[location]  is a way of organizing the form data. When the form is submitted, the server will receive the data in a structured way, where the data for the title will be grouped under the "campground"  -->
 <!-- HTML forms natively support only two HTTP methods: GET and POST. To work around this limitation and enable other HTTP methods like PUT, DELETE, etc., the concept of "method-override" is used. -->
 
-<div class="row">
+<div class="row mb-3">
   <h1 class="mb-3 text-center">Edit Campground</h1>
   <div class="col-6 offset-3">
     <form
@@ -46,21 +46,6 @@
         <div class="invalid-feedback">Please enter campground location.</div>
       </div>
 
-      <!-- Campground Image url -->
-      <div class="mb-3">
-        <label for="image">Add Images</label>
-        <input
-          class="form-control"
-          type="file"
-          name="image"
-          id="image"
-          multiple
-        />
-
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please enter campground image url.</div>
-      </div>
-
       <!-- Campground Price -->
       <div class="input-group mb-3">
         <span class="input-group-text">$</span>
@@ -90,12 +75,35 @@
           id="description"
           style="height: 80px"
           required
-        ><%= campground.description %></textarea>
+        >
+<%= campground.description %></textarea
+        >
         <label for="description">Description</label>
 
         <div class="valid-feedback">Looks good!</div>
         <div class="invalid-feedback">Please enter campground description.</div>
       </div>
+
+      <!-- Campground Image url -->
+      <div class="mb-3">
+        <label class="form-label">Choose Image(s)</label>
+        <div class="form-file custom-file">
+          <input
+            class="form-control custom-file-input"
+            type="file"
+            id="image"
+            name="image"
+            multiple
+            onchange="previewMultiple(event)"
+          />
+          <label
+            for="image"
+            class="form-label custom-file-label text-body-secondary"
+          ></label>
+        </div>
+        <div id="formFile"></div>
+      </div>
+
       <div class="mb-3">
         <button class="btn btn-info">Update Campground</button>
       </div>
