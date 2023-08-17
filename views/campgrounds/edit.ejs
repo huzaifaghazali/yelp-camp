@@ -1,4 +1,5 @@
 <% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/images.css" />
 <!-- The use of campground[title] and campground[location]  is a way of organizing the form data. When the form is submitted, the server will receive the data in a structured way, where the data for the title will be grouped under the "campground"  -->
 <!-- HTML forms natively support only two HTTP methods: GET and POST. To work around this limitation and enable other HTTP methods like PUT, DELETE, etc., the concept of "method-override" is used. -->
 
@@ -86,7 +87,7 @@
 
       <!-- Campground Image url -->
       <div class="mb-3">
-        <label class="form-label">Choose Image(s)</label>
+        <label class="form-label">Add more Image(s)</label>
         <div class="form-file custom-file">
           <input
             class="form-control custom-file-input"
