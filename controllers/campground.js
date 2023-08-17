@@ -75,6 +75,8 @@ const updateCampground = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = req.body.campground;
 
+  console.log(req.body);
+
   // Update the campground with specific ID
   const campground = await Campground.findOneAndUpdate(
     { _id: id }, // Filter criteria
