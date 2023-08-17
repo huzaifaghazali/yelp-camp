@@ -1,3 +1,4 @@
+const { cloudinary } = require('../cloudinary');
 // Model
 const Campground = require('../models/campgrounds');
 
@@ -89,6 +90,16 @@ const updateCampground = catchAsync(async (req, res) => {
   })); // Store the image path and filename from cloudinary
   campground.images.push(...imgs); // adds the newly uploaded images to the existing collection of images associated with the campground.
 
+  // Delete Images from DB and cloudinary
+  if (req.body.deleteImages) {
+    for (let filename of req.body.deleteImages) {
+      await cloudinary.uploader.destroy(filename);
+    }
+    await campground.updateOne({
+      $pull: { images: { filename: { $in: req.body.deleteImages } } },
+    });
+  }
+  
   await campground.save();
 
   req.flash('success', 'Successfully updated campground!'); // sets up a flash message with the type "success" in the req object
