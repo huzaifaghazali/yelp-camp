@@ -10,13 +10,24 @@ const ImageSchema = new Schema({
 });
 
 // Virtual Property to determine the size of images on edit page
-ImageSchema.virtual('thumbnail').get(function(){
-  return this.url.replace('/upload', '/upload/w_200')
+ImageSchema.virtual('thumbnail').get(function () {
+  return this.url.replace('/upload', '/upload/w_200');
 });
 
 const CampgroundSchema = new Schema({
   title: String,
   images: [ImageSchema],
+  geometry: {
+    type: {
+      type: String,
+      enum: ['Point'], // location type must be string
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+  },
   price: Number,
   description: String,
   location: String,
