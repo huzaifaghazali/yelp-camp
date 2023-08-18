@@ -76,8 +76,6 @@ const updateCampground = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = req.body.campground;
 
-  console.log(req.body);
-
   // Update the campground with specific ID
   const campground = await Campground.findOneAndUpdate(
     { _id: id }, // Filter criteria
@@ -95,6 +93,9 @@ const updateCampground = catchAsync(async (req, res) => {
     for (let filename of req.body.deleteImages) {
       await cloudinary.uploader.destroy(filename);
     }
+
+    // $pull remove specific elements from the images array of the campground document.
+    // $in(select) elements with filename values matching any value in the req.body.deleteImages
     await campground.updateOne({
       $pull: { images: { filename: { $in: req.body.deleteImages } } },
     });
