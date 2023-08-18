@@ -1,9 +1,14 @@
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const { cloudinary } = require('../cloudinary');
 // Model
 const Campground = require('../models/campgrounds');
 
 // Errors
 const catchAsync = require('../utils/catchAsync');
+
+// Mapbox
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
 // Get all the campgrounds
 const showCampgrounds = async (req, res) => {
@@ -24,16 +29,24 @@ const createCampground = catchAsync(async (req, res, next) => {
 
   const data = req.body.campground;
 
-  // Create a new campground
-  const campground = new Campground(data);
-  campground.images = req.files.map((f) => ({
-    url: f.path,
-    filename: f.filename,
-  })); // Store the image path and filename from cloudinary
-  campground.author = req.user._id; // Associate the newly created campground with logged user
-  await campground.save();
-  req.flash('success', 'Successfully made a new campground!'); // sets up a flash message with the type "success" in the req object
-  res.redirect(`/campgrounds/${campground._id}`); // Go to the newly created campground
+  const geoData = await geocoder
+    .forwardGeocode({
+      query: req.body.campground.location,
+      limit: 1,
+    })
+    .send();
+   res.send(geoData.body.features[0].geometry.coordinates);
+   
+  // // Create a new campground
+  // const campground = new Campground(data);
+  // campground.images = req.files.map((f) => ({
+  //   url: f.path,
+  //   filename: f.filename,
+  // })); // Store the image path and filename from cloudinary
+  // campground.author = req.user._id; // Associate the newly created campground with logged user
+  // await campground.save();
+  // req.flash('success', 'Successfully made a new campground!'); // sets up a flash message with the type "success" in the req object
+  // res.redirect(`/campgrounds/${campground._id}`); // Go to the newly created campground
 });
 
 // Get Single Campground
@@ -100,7 +113,7 @@ const updateCampground = catchAsync(async (req, res) => {
       $pull: { images: { filename: { $in: req.body.deleteImages } } },
     });
   }
-  
+
   await campground.save();
 
   req.flash('success', 'Successfully updated campground!'); // sets up a flash message with the type "success" in the req object
