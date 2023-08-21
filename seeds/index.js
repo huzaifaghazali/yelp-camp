@@ -15,8 +15,8 @@ const seedDB = async () => {
     // Delete all the campgrounds
     await Campground.deleteMany({});
 
-    // Create 50 campgrounds
-    for (let i = 0; i < 50; i++) {
+    // Create 200 campgrounds
+    for (let i = 0; i < 200; i++) {
       // Generate the random number b/w 0 to 999
       const random1000 = Math.floor(Math.random() * 1000);
 
