@@ -1,11 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Yelp Camp</title>
-</head>
-<body>
-   <h1>Home Yelp Camp</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YelpCamp</title>
+
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/stylesheets/home.css" />
+  </head>
+
+  <body class="d-flex text-center text-light bg-dark">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <header class="mb-auto">
+        <div>
+          <h3 class="float-md-start mb-0">YelpCamp</h3>
+          <nav class="nav justify-content-center float-md-end">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link" href="/campgrounds">Campgrounds</a>
+            <% if(!currentUser) { %>
+            <a class="nav-link" href="/register">Register</a>
+            <a class="nav-link" href="/login">Login</a>
+            <% } else { %>
+            <a class="nav-link" href="/logout">Logout</a>
+            <% } %>
+          </nav>
+        </div>
+      </header>
+      <main class="px-3">
+        <h1>YelpCamp</h1>
+        <p class="lead">
+          Welcome to YelpCamp! <br />
+          Jump right in and explore our many campgrounds. <br />
+          Feel free to share some of your own and comment on others!
+        </p>
+        <a
+          href="/campgrounds"
+          class="btn btn-secondary btn-lg fw-bold border border-white rounded-pill"
+          >View Campgrounds</a
+        >
+      </main>
+
+      <footer class="mt-auto text-white-50">
+        <p>
+          &copy; YelpCamp <%= new Date().getFullYear() %> Created by Huzaifa
+          Ghazali
+        </p>
+      </footer>
+    </div>
+
+    <!-- MDB -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"
+    ></script>
+  </body>
 </html>
