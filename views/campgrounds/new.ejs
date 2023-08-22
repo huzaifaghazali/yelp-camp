@@ -5,104 +5,113 @@
 <div class="row mb-5">
   <h1 class="mb-3 text-center">New Campground</h1>
   <div class="col-6 offset-3">
-    <form
-      action="/campgrounds"
-      method="POST"
-      class="validated-form"
-      novalidate
-      enctype="multipart/form-data"
-    >
-      <!-- Campground Title -->
-      <div class="form-floating mb-3">
-        <input
-          class="form-control"
-          type="text"
-          name="campground[title]"
-          id="title"
-          placeholder="Enter Campground Title"
-          required
-        />
-        <label for="title">Title</label>
+    <div class="card bg-light">
+      <div class="card-body">
+        <form
+          action="/campgrounds"
+          method="POST"
+          class="validated-form"
+          novalidate
+          enctype="multipart/form-data"
+        >
+          <!-- Campground Title -->
+          <div class="form-floating mb-3">
+            <input
+              class="form-control"
+              type="text"
+              name="campground[title]"
+              id="title"
+              placeholder="Enter Campground Title"
+              required
+            />
+            <label for="title">Title</label>
 
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please enter campground name.</div>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter campground name.</div>
+          </div>
+
+          <!-- Campground Location -->
+          <div class="form-floating mb-3">
+            <input
+              class="form-control"
+              type="text"
+              name="campground[location]"
+              id="location"
+              placeholder="Enter Campground Description"
+              required
+            />
+            <label for="location">Location</label>
+
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              Please enter campground location.
+            </div>
+          </div>
+
+          <!-- Campground Price -->
+          <div class="input-group mb-3">
+            <span class="input-group-text">$</span>
+            <div id="price-label" class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="price"
+                placeholder="Enter Price"
+                name="campground[price]"
+                aria-describedby="price-label"
+                required
+              />
+              <label for="price">Campground Price</label>
+            </div>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter campground price.</div>
+          </div>
+
+          <!-- Campground Description -->
+          <div class="form-floating mb-3">
+            <textarea
+              class="form-control"
+              placeholder="Campground Description"
+              name="campground[description]"
+              id="description"
+              style="height: 80px"
+              required
+            ></textarea>
+            <label for="description">Description</label>
+
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              Please enter campground description.
+            </div>
+          </div>
+
+          <!-- Campground Image url -->
+          <div class="mb-3">
+            <label class="form-label">Choose Image(s)</label>
+            <div class="form-file custom-file">
+              <input
+                class="form-control custom-file-input"
+                type="file"
+                id="image"
+                name="image"
+                multiple
+                onchange="previewMultiple(event)"
+              />
+              <label
+                for="image"
+                class="form-label custom-file-label text-body-secondary"
+              ></label>
+            </div>
+            <div id="formFile"></div>
+          </div>
+
+          <div class="mb-3 text-center">
+            <a class="btn btn-outline-dark" href="/campgrounds">All Campgrounds</a>
+            <button class="btn btn-success">Add Campground</button>
+          </div>
+        </form>
+        
       </div>
-
-      <!-- Campground Location -->
-      <div class="form-floating mb-3">
-        <input
-          class="form-control"
-          type="text"
-          name="campground[location]"
-          id="location"
-          placeholder="Enter Campground Description"
-          required
-        />
-        <label for="location">Location</label>
-
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please enter campground location.</div>
-      </div>
-
-      <!-- Campground Price -->
-      <div class="input-group mb-3">
-        <span class="input-group-text">$</span>
-        <div id="price-label" class="form-floating">
-          <input
-            type="text"
-            class="form-control"
-            id="price"
-            placeholder="Enter Price"
-            name="campground[price]"
-            aria-describedby="price-label"
-            required
-          />
-          <label for="price">Campground Price</label>
-        </div>
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please enter campground price.</div>
-      </div>
-
-      <!-- Campground Description -->
-      <div class="form-floating mb-3">
-        <textarea
-          class="form-control"
-          placeholder="Campground Description"
-          name="campground[description]"
-          id="description"
-          style="height: 80px"
-          required
-        ></textarea>
-        <label for="description">Description</label>
-
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please enter campground description.</div>
-      </div>
-
-      <!-- Campground Image url -->
-      <div class="mb-3">
-        <label class="form-label">Choose Image(s)</label>
-        <div class="form-file custom-file">
-          <input
-            class="form-control custom-file-input"
-            type="file"
-            id="image"
-            name="image"
-            multiple
-            onchange="previewMultiple(event)"
-          />
-          <label
-            for="image"
-            class="form-label custom-file-label text-body-secondary"
-          ></label>
-        </div>
-        <div id="formFile"></div>
-      </div>
-
-      <div class="mb-3">
-        <button class="btn btn-success">Add Campground</button>
-      </div>
-    </form>
-    <a href="/campgrounds">All Campgrounds</a>
+    </div>
   </div>
 </div>
