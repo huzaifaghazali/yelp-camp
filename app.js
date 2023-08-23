@@ -7,6 +7,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const mongoSanitize = require('express-mongo-sanitize');
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
@@ -50,6 +51,11 @@ app.use(session(sessionConfig)); // Set the express session middleware
 app.use(flash()); // Set the flash middleware
 app.use(passport.initialize()); // initializes Passport and sets it up to work application.
 app.use(passport.session()); // enables Passport to manage user sessions, allowing you to keep track of authenticated users across requests.
+app.use(
+  mongoSanitize({
+    replaceWith: '_', // characters that might be used in a malicious query will be replaced with underscores
+  })
+); // to stop the mongo injection
 
 // sets up a local authentication strategy
 passport.use(new LocalStrategy(User.authenticate())); // User.authenticate() is a method provided by passport-local-mongoose
