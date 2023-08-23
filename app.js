@@ -38,6 +38,7 @@ app.use(express.urlencoded({ extended: true })); // URL-encoded data from the bo
 app.use(methodOverride('_method')); // Used to override the HTTP methods e.g URLs like /route?_method=PUT.
 app.use(express.static(path.join(__dirname, 'public'))); //  serving static files from a directory to the client's browser
 const sessionConfig = {
+  name: 'session',
   secret: 'sessionsecret',
   resave: false, // to save the session data
   saveUninitialized: true, //  to save sessions that are new and haven't been modified.
