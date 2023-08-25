@@ -12,8 +12,15 @@ const geocoder = mbxGeocoding({ accessToken: mapBoxToken }); // initializes a ge
 
 // Get all the campgrounds
 const showCampgrounds = async (req, res) => {
-  const campgrounds = await Campground.find({}); // Get all the Campgrounds
-  res.render('campgrounds/index', { campgrounds }); // renders the 'campground/index' ejs view and pass campgrounds to it.
+
+  const searchQuery = req.query.search || ''; // Default to empty string if search query is not provided
+
+  const campgrounds = await Campground.find({ title: { $regex: new RegExp(searchQuery, 'i') } });
+
+  res.render('campgrounds/index', { campgrounds, searchQuery });
+
+  // const campgrounds = await Campground.find({}); // Get all the Campgrounds
+  // res.render('campgrounds/index', { campgrounds }); // renders the 'campground/index' ejs view and pass campgrounds to it.
 };
 
 // Show the new campground form
