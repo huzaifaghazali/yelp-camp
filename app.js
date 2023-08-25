@@ -75,7 +75,7 @@ const styleSrcUrls = [
   'https://fonts.googleapis.com/',
   'https://use.fontawesome.com/',
   'https://cdn.jsdelivr.net',
-  'https://cdnjs.cloudflare.com/'
+  'https://cdnjs.cloudflare.com/',
 ];
 const connectSrcUrls = [
   'https://api.mapbox.com/',
@@ -103,6 +103,7 @@ app.use(
       ],
       fontSrc: ["'self'", ...fontSrcUrls],
       manifestSrc: ["'self'"],
+      'script-src-attr': ["'unsafe-inline'"],
     },
   })
 );
