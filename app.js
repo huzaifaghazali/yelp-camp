@@ -102,6 +102,7 @@ app.use(
         'https://images.unsplash.com/',
       ],
       fontSrc: ["'self'", ...fontSrcUrls],
+      manifestSrc: ["'self'"],
     },
   })
 );
